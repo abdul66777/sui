@@ -58,9 +58,29 @@
             font-weight: bold;
             background-color: white;
         }
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            font-style: italic;
+        }
     </style>
+    <script>
+        // Auto-refresh every 10 minutes (600000 milliseconds)
+        setTimeout(function() {
+            location.reload();
+        }, 600000);
+
+        // Function to get current time in UTC+7 and update footer
+        function updateFooter() {
+            const now = new Date();
+            const utc7Time = new Date(now.getTime() + (7 * 60 * 60 * 1000)); // Convert to UTC+7
+            const formattedTime = utc7Time.toISOString().slice(0, 19).replace('T', ' ');
+            document.getElementById('refreshTime').innerText = `Last refresh: ${formattedTime} +7 UTC`;
+        }
+    </script>
 </head>
-<body>
+<body onload="updateFooter()">
 
 <div class="container">
     <div class="header">
@@ -90,6 +110,10 @@
         </tfoot>
     </table>
 </div>
+
+<footer>
+    <p id="refreshTime"></p>
+</footer>
 
 <script>
     // Simulate fetching data from API using a mock function
