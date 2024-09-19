@@ -30,7 +30,7 @@
             margin-bottom: 20px;
         }
         th, td {
-            border: 0px solid #ddd;
+            border: 1px solid #ddd;
             padding: 12px;
             text-align: center;
         }
@@ -66,7 +66,7 @@
         }
     </style>
     <script>
-        // Auto-refresh every 10 minutes (600000 milliseconds)
+        // Auto-refresh every 30 minutes (1800000 milliseconds)
         setTimeout(function() {
             location.reload();
         }, 1800000);
@@ -89,6 +89,7 @@
     <table id="walletTable">
         <thead>
             <tr>
+                <th>Node</th>
                 <th>Wallet</th>
                 <th>SUI Balance</th>
                 <th>SUI in USD</th>
@@ -102,6 +103,7 @@
         <tfoot>
             <tr class="total-row">
                 <td>Total</td>
+                <td></td>
                 <td id="totalSuiBalance">0</td>
                 <td id="totalSuiUsd">0</td>
                 <td id="totalMineralBalance">0</td>
@@ -144,7 +146,7 @@
         "0x4758c8a315b948b623110caaabf66c1fc821cba20ac2a323ee3deb4fef29f452"
     ];
 
-        // Add descriptive labels for each wallet (e.g., Node 1, Node 2)
+    // Add descriptive labels for each wallet (e.g., Node 1, Node 2)
     const walletLabels = [
         "Node 1",
         "Node 2",
@@ -182,19 +184,22 @@
     async function renderWallets() {
         const tableBody = document.querySelector('#walletTable tbody');
 
-        for (const wallet of wallets) {
+        for (let i = 0; i < wallets.length; i++) {
+            const wallet = wallets[i];
+            const label = walletLabels[i];
             const walletData = await fetchWalletData(wallet);
             const suiData = walletData.find(coin => coin.coinSymbol === "SUI");
             const mineralData = walletData.find(coin => coin.coinSymbol === "MINE");
 
-            const suiBalance = suiData.balance;
-            const suiUsd = suiData.balanceUsd;
-            const mineralBalance = mineralData.balance;
-            const mineralUsd = mineralData.balanceUsd;
+            const suiBalance = suiData ? suiData.balance : 0;
+            const suiUsd = suiData ? suiData.balanceUsd : 0;
+            const mineralBalance = mineralData ? mineralData.balance : 0;
+            const mineralUsd = mineralData ? mineralData.balanceUsd : 0;
 
             const row = `
                 <tr>
-                    <td>${wallet}</td>
+                    <td>${label}</td>
+                    <td>${wallet.slice(0, 6)}...${wallet.slice(-6)}</td>
                     <td>${suiBalance.toFixed(6)}</td>
                     <td>${suiUsd.toFixed(2)}</td>
                     <td>${mineralBalance.toFixed(6)}</td>
@@ -208,7 +213,7 @@
         }
     }
 
-    // Call the render function to display wallets
+    // Call render function on page load
     renderWallets();
 </script>
 
